@@ -20,7 +20,12 @@ public class DatabasedGroupMemberRepository implements GroupMemberRepository {
     }
 
     @Override
-    public void save(GroupMember groupDevice) {
-        entityManager.persist(groupDevice);
+    public void save(GroupMember groupMember) {
+        entityManager.persist(groupMember);
+    }
+
+    @Override
+    public void delete(GroupMember groupMember) {
+        entityManager.remove(groupMember);
     }
 }

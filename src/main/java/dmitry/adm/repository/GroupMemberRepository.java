@@ -9,8 +9,8 @@ public interface GroupMemberRepository {
 
     Optional<GroupMember> findByGroupIdAndMemberId(int groupId, int memberId);
 
-    void save(GroupMember groupDevice);
+    void save(GroupMember groupMember);
 
-    void delete
+    void delete(GroupMember groupMember);
 
 }
