@@ -24,7 +24,9 @@ public enum ErrorType implements ApiError {
     USER_IS_NOT_GROUP_OWNER(       35, "User is not group owner" , 400),
 
     DEVICE_ALREADY_LINKED_TO_GROUP(36, "Device already linked to group", 400),
-    DEVICE_NOT_LINKED_TO_GROUP(    37, "Device not linked to group", 400);
+    DEVICE_NOT_LINKED_TO_GROUP(    37, "Device not linked to group", 400),
+
+    GROUP_KICK_YOURSELF(           38, "Kick yourself", 400);
 
     private final int code;
     private final String message;
