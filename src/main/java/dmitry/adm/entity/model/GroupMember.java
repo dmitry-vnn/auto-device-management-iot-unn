@@ -15,7 +15,6 @@ import java.io.Serializable;
 @IdClass(GroupMember.PrimaryKey.class)
 public class GroupMember {
 
-    @AllArgsConstructor
     @EqualsAndHashCode
     public static final class PrimaryKey implements Serializable {
 
@@ -29,7 +28,7 @@ public class GroupMember {
 
     @Id
     @Column(name = "member_id")
-    private int deviceId;
+    private int memberId;
 
     protected GroupMember() {
     }

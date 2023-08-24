@@ -1,6 +1,6 @@
 package dmitry.adm.entity.dto;
 
-import dmitry.adm.exception.ApiError;
+import dmitry.adm.error.ApiError;
 import lombok.Getter;
 
 @Getter

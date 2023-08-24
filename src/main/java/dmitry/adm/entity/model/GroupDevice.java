@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -15,8 +16,10 @@ import java.io.Serializable;
 @IdClass(GroupDevice.PrimaryKey.class)
 public class GroupDevice {
 
+    @AllArgsConstructor
+    @NoArgsConstructor
     @EqualsAndHashCode
-    static final class PrimaryKey implements Serializable {
+    public static final class PrimaryKey implements Serializable {
 
         private int groupId;
         private int deviceId;

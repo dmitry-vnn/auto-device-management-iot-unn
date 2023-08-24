@@ -1,4 +1,4 @@
-package dmitry.adm.exception;
+package dmitry.adm.error;
 
 import lombok.Getter;
 

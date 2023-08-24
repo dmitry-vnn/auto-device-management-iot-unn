@@ -15,20 +15,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @Order(1)
 public class ApiSecurityConfig {
 
-    private final String apiKeyHeader = "apiKey";
-
     @Value("${adm.api-key-value}")
     private String apiKeyValue;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        ApiKeyAuthFilter apiKeyAuthFilter = new ApiKeyAuthFilter(apiKeyHeader);
+        ApiKeyAuthFilter apiKeyAuthFilter = new ApiKeyAuthFilter("X-API-Key");
 
         apiKeyAuthFilter.setAuthenticationManager(authentication -> {
 
-            var requestApiKeyValue = (String) authentication.getPrincipal();
+            var requestApiKeyHeaderValue = (String) authentication.getPrincipal();
 
-            if (!apiKeyValue.equals(requestApiKeyValue)) {
+            if (!apiKeyValue.equals(requestApiKeyHeaderValue)) {
                 throw new BadCredentialsException("invalid api key");
             }
 
@@ -38,7 +36,7 @@ public class ApiSecurityConfig {
 
         });
 
-        httpSecurity.securityMatcher("/devices/**")
+        httpSecurity.securityMatcher("/api/**")
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilter(apiKeyAuthFilter).authorizeHttpRequests().anyRequest().authenticated()

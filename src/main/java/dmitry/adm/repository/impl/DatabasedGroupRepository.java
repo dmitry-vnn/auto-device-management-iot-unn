@@ -4,7 +4,7 @@ import dmitry.adm.entity.model.Group;
 import dmitry.adm.repository.GroupRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,28 +23,64 @@ public class DatabasedGroupRepository implements GroupRepository {
 
     @Override
     public Optional<Group> findByName(String name) {
-        return extractSingleGroupFromQuery(
-                entityManager.createQuery("SELECT g FROM Group g WHERE g.name = :name").setParameter("name", name)
-        );
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Optional<Group> extractSingleGroupFromQuery(Query query) {
-        List<Group> singleList = query.getResultList();
-        if (singleList.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(singleList.get(0));
+        return entityManager
+                        .createQuery(
+                            "SELECT g FROM Group g WHERE g.name = :name",
+                            Group.class
+                        )
+                        .setParameter("name", name)
+                        .getResultList().stream().findFirst();
     }
 
 
+    @Transactional
     @Override
     public void save(Group group) {
         entityManager.persist(group);
     }
 
+    @Transactional
     @Override
     public void delete(Group group) {
+        if (!entityManager.contains(group)) {
+            group = entityManager.merge(group);
+        }
         entityManager.remove(group);
+    }
+
+    @Override
+    public boolean groupExists(String groupName) {
+        return entityManager
+                .createQuery("SELECT COUNT(*) FROM Group g WHERE g.name = :groupName", Long.class)
+                .setParameter("groupName", groupName)
+                .getSingleResult() != 0;
+    }
+
+    @Override
+    public List<String> findAllUserGroupNames(int userId) {
+        return entityManager
+                .createQuery("""
+                            SELECT g.name
+                                FROM GroupMember gm
+                                JOIN Group g
+                                    ON gm.groupId = g.id
+                                WHERE
+                                    gm.memberId = :userId
+                            
+                            UNION
+                            
+                            SELECT g.name
+                                FROM Group g
+                                WHERE
+                                    g.ownerId = :userId
+                        """, String.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    @Transactional
+    @Override
+    public void update(Group group) {
+        entityManager.merge(group);
     }
 }

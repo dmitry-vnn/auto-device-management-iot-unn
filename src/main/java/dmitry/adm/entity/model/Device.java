@@ -12,7 +12,6 @@ import lombok.Getter;
 public class Device {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String password;

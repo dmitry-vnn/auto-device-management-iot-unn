@@ -4,6 +4,7 @@ import dmitry.adm.entity.model.Device;
 import dmitry.adm.repository.DeviceRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class DatabasedDeviceRepository implements DeviceRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Transactional
     public void save(Device device) {
         entityManager.persist(device);
     }
